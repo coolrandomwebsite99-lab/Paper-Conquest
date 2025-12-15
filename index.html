@@ -89,7 +89,6 @@
             text-shadow: 0 2px 0 #e1b12c;
         }
 
-        /* Rank Badge HUD */
         .rank-badge-hud {
             position: absolute;
             top: 90px; left: 20px;
@@ -98,7 +97,7 @@
             border-radius: 20px;
             font-weight: 800;
             font-size: 1rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
             display: flex; align-items: center; gap: 10px;
             backdrop-filter: blur(5px);
             border: 2px solid rgba(255,255,255,0.8);
@@ -155,41 +154,11 @@
             transform: rotate(-3deg);
         }
 
-        /* World Progress Bar (Menu) */
-        .world-progress-container {
-            width: 80%;
-            max-width: 500px;
-            background: #dfe6e9;
-            height: 40px;
-            border-radius: 20px;
-            margin: 20px 0;
-            position: relative;
-            overflow: hidden;
-            border: 4px solid #fff;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .world-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00b894, #00cec9);
-            width: 0%;
-            transition: width 1s ease-out;
-            position: relative;
-        }
-        .world-progress-text {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 900; color: #2d3436;
-            text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-            z-index: 2;
-            font-size: 1.1rem;
-        }
         .rank-display-container {
             display: flex; align-items: center; gap: 15px; margin-bottom: 20px;
             background: white; padding: 10px 30px; border-radius: 50px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        .rank-icon-large { width: 50px; height: 50px; }
         .rank-text-large { font-size: 1.8rem; font-weight: 900; color: #2d3436; }
 
         /* Buttons */
@@ -213,12 +182,40 @@
         .btn-play { background: #00b894; color: white; box-shadow: 0 8px 0 #00896f, 0 20px 30px rgba(0,184,148,0.4); }
         .btn-shop { background: #fdcb6e; color: #2d3436; box-shadow: 0 8px 0 #e1b12c, 0 20px 30px rgba(253,203,110,0.4); }
         .btn-rank { background: #6c5ce7; color: white; box-shadow: 0 8px 0 #5f27cd, 0 20px 30px rgba(108, 92, 231, 0.4); }
+        .btn-world { background: #0984e3; color: white; box-shadow: 0 8px 0 #074b83, 0 20px 30px rgba(9, 132, 227, 0.4); }
         .btn-data { background: #636e72; color: white; box-shadow: 0 8px 0 #2d3436, 0 20px 30px rgba(45, 52, 54, 0.4); font-size: 1rem; padding: 15px 30px; }
         .btn-close { background: #ff7675; color: white; box-shadow: 0 6px 0 #d63031; font-size: 1.2rem; padding: 15px 40px; }
         .btn-revive { background: #0984e3; color: white; box-shadow: 0 8px 0 #074e85; font-size: 1.2rem; padding: 15px 40px; animation: pulse 2s infinite; }
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
+        /* World Menu Styles */
+        .world-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+            width: 90%; max-width: 800px; height: 60vh; overflow-y: auto; padding: 10px;
+        }
+        .world-card {
+            background: white; border-radius: 20px; padding: 20px;
+            position: relative; overflow: hidden; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 4px solid transparent;
+            transition: transform 0.2s;
+        }
+        .world-card:hover { transform: scale(1.03); }
+        .world-card.active { border-color: #00b894; background: #e3fdf5; }
+        .world-card.locked { filter: grayscale(1); opacity: 0.7; pointer-events: none; }
+        .world-progress-bar {
+            height: 10px; background: #dfe6e9; border-radius: 5px; margin-top: 10px; overflow: hidden;
+        }
+        .world-progress-fill-card {
+            height: 100%; background: #00b894; width: 0%;
+        }
+        .world-complete-badge {
+            position: absolute; top: 10px; right: 10px; background: #fdcb6e; color: #2d3436;
+            padding: 5px 10px; border-radius: 10px; font-weight: bold; font-size: 0.8rem;
+            display: none;
+        }
+        .world-card.completed .world-complete-badge { display: block; }
+        
         /* Save Menu */
         textarea.save-input {
             width: 80%; height: 100px;
@@ -244,48 +241,43 @@
             align-items: center;
             scroll-behavior: smooth;
         }
-        
         .rank-step {
-            width: 95%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 15px 0;
-            position: relative;
-            z-index: 1;
-            opacity: 0.6;
-            transition: opacity 0.3s, transform 0.3s;
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            width: 95%; display: flex; align-items: center; justify-content: space-between; margin: 15px 0;
+            position: relative; z-index: 1; opacity: 0.6; transition: opacity 0.3s, transform 0.3s;
+            background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         .rank-step.active { opacity: 1; transform: scale(1.02); border: 2px solid #6c5ce7; }
         .rank-step.locked { filter: grayscale(1); background: #dfe6e9; }
-        
         .rank-info { display:flex; align-items:center; gap:15px; }
         .rank-info h3 { margin: 0; font-size: 1.1rem; color: #2d3436; }
         .rank-info small { color: #b2bec3; font-weight: bold; }
-        
         .rank-rewards {
-            background: #ffeaa7;
-            padding: 8px 15px;
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; gap: 5px;
-            font-weight: bold; color: #d35400;
+            background: #ffeaa7; padding: 8px 15px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 5px; font-weight: bold; color: #d35400;
         }
 
-        /* Shop */
-        .shop-container {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 90%; max-width: 800px; height: 60vh;
+        /* Shop (SIDE-BY-SIDE LAYOUT) */
+        .shop-container { 
+            display: grid; 
+            grid-template-columns: 1fr 1.5fr; /* Crate 1 part, Skins 1.5 parts */
+            gap: 20px; 
+            width: 90%; 
+            max-width: 800px; 
+            height: 60vh; 
         }
         .skin-list {
-            background: white; border-radius: 20px; padding: 20px; overflow-y: auto;
+            background: white; border-radius: 20px; padding: 20px; 
+            overflow-y: auto; overflow-x: hidden;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; align-content: start;
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); /* 3 COLUMNS */
+            gap: 10px; align-content: start;
         }
         .crate-section {
-            background: white; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+            background: white; border-radius: 20px; 
+            display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; 
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         .crate-box-small {
@@ -296,10 +288,10 @@
         .crate-box-small::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 80%; border: 4px dashed rgba(255,255,255,0.1); border-radius: 10px; }
         .crate-box-small::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: #fdcb6e; border-radius: 8px; box-shadow: 0 4px 0 #e1b12c; border: 2px solid #2d3436; }
 
-        .skin-item { aspect-ratio: 1; border-radius: 12px; border: 3px solid #eee; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.1s; }
+        .skin-item { aspect-ratio: 1; border-radius: 12px; border: 3px solid #eee; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.1s; background: #fff; }
         .skin-item:hover { transform: scale(1.05); }
         .skin-item.equipped { border-color: #00b894; background: #e0fbf6; }
-        .skin-item.locked { opacity: 0.5; filter: grayscale(1); }
+        .skin-item.locked { opacity: 0.5; filter: grayscale(1); background: #f0f2f5; }
         
         .skin-icon-container { width: 50px; height: 50px; position: relative; margin-bottom: 5px; }
         .skin-block { width: 100%; height: 100%; border-radius: 4px; position: absolute; top: 0; left: 0; box-shadow: 0 4px 0 rgba(0,0,0,0.2); }
@@ -311,6 +303,17 @@
         .fc-mouth { position: absolute; bottom: 0; left: 25%; width: 50%; height: 40%; background: #000; }
         .fc-nose { position: absolute; top: 30%; left: 35%; width: 30%; height: 40%; background: #000; }
         .face-sus { position: absolute; top: 30%; left: 20%; width: 70%; height: 40%; background: #dfe6e9; border-radius: 5px; }
+        .face-ninja { position: absolute; top: 20%; left: 0; width: 100%; height: 60%; background: #2d3436; border-radius: 4px; }
+        .fn-slit { position: absolute; top: 30%; left: 10%; width: 80%; height: 40%; background: #ffeaa7; border-radius: 2px; }
+        .fn-eye-l, .fn-eye-r { width: 20%; height: 40%; background: #000; position: absolute; top: 30%; border-radius: 50%; }
+        .fn-eye-l { left: 20%; } .fn-eye-r { right: 20%; }
+        .face-robot { position: absolute; top:20%; left:10%; width:80%; height:60%; background:#b2bec3; border:2px solid #636e72; }
+        .fr-eye { position: absolute; top:30%; left:10%; width:80%; height:20%; background:#000; }
+        .fr-pupil { width: 40%; height: 80%; background: #ff7675; margin: 1px auto; animation: scan 2s infinite alternate; }
+        .face-king { position: absolute; top:-10%; left:10%; width:80%; height:30%; background:#f1c40f; clip-path: polygon(0% 100%, 20% 0%, 40% 100%, 60% 0%, 80% 100%, 100% 0%, 100% 100%, 0% 100%); }
+        .fk-eyes { position: absolute; top:40%; left:20%; width:60%; height:20%; display:flex; justify-content:space-between; }
+        .fk-eye { width: 8px; height: 8px; background: black; border-radius: 50%; }
+        
         .rarity-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; }
 
         /* Fullscreen Crate Animation */
@@ -359,6 +362,24 @@
             pointer-events: none; z-index: 15;
         }
         #domination-mode.active { transform: scale(1); }
+        
+        /* Unlock Animation */
+        #unlock-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 80;
+            background: rgba(0,184,148,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s;
+        }
+        #unlock-overlay.visible { opacity: 1; pointer-events: auto; }
+        .unlock-title { font-size: 3rem; color: #fff; font-weight: 900; text-transform: uppercase; animation: popIn 0.5s 0.2s backwards; }
+        .unlock-subtitle { font-size: 1.5rem; color: #2d3436; font-weight: bold; margin-bottom: 30px; animation: popIn 0.5s 0.4s backwards; }
+
+        /* 100% Bonus UI */
+        #bonus-ui {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            background: #f1c40f; color: #d35400; padding: 10px 30px; border-radius: 30px;
+            font-weight: 900; font-size: 2rem; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 50; display: none; animation: pulse 0.5s infinite;
+        }
     </style>
 </head>
 <body>
@@ -378,6 +399,7 @@
         </div>
         
         <div id="domination-mode">DOMINATION MODE</div>
+        <div id="bonus-ui">BONUS ROUND! <span id="bonus-timer">5</span>s</div>
         
         <div class="rank-badge-hud" id="hud-rank">
             <div id="hud-rank-icon"></div>
@@ -392,6 +414,14 @@
         <div id="mobile-controls">
             <div class="joystick-base" id="joystick"><div class="joystick-stick" id="stick"></div></div>
         </div>
+    </div>
+    
+    <!-- Unlock Overlay -->
+    <div id="unlock-overlay">
+        <h1 style="color:#2d3436; font-size:4rem; margin:0;">CONGRATS!</h1>
+        <div class="unlock-title" id="unlock-msg">NEW WORLD UNLOCKED</div>
+        <div class="unlock-subtitle" id="unlock-sub">You have conquered 100% of this world!</div>
+        <button class="btn btn-shop" onclick="document.getElementById('unlock-overlay').classList.remove('visible')">AWESOME</button>
     </div>
 
     <!-- Main Menu -->
@@ -410,6 +440,7 @@
         <div class="btn-group">
             <button class="btn btn-play" onclick="game.start()">Conquer</button>
             <button class="btn btn-rank" onclick="rankMenu.open()">My Rank</button>
+            <button class="btn btn-world" onclick="worldMenu.open()">Worlds</button>
             <button class="btn btn-shop" onclick="shop.open()">Crates</button>
             <button class="btn btn-data" onclick="saveMenu.open()">Data</button>
         </div>
@@ -417,17 +448,20 @@
         <div style="margin-top:20px; font-weight:bold; color:#b2bec3;">Total Coins: <span id="menu-coins">0</span></div>
     </div>
 
-    <!-- Rank Menu (Vertical Ladder) -->
+    <!-- World Menu -->
+    <div id="world-menu" class="menu-overlay hidden" style="z-index: 35;">
+        <h1>PLANETARY MAP</h1>
+        <div class="world-grid" id="world-grid"></div>
+        <button class="btn btn-close" onclick="worldMenu.close()">Back</button>
+    </div>
+
+    <!-- Rank Menu -->
     <div id="rank-menu" class="menu-overlay hidden" style="z-index: 35;">
         <div style="display:flex; justify-content:space-between; width:90%; max-width:500px; margin-bottom:10px; align-items:center;">
             <h1 style="font-size: 2rem; margin: 0;">RANK LADDER</h1>
             <div class="stat-pill"><div class="star-icon">★</div><span id="ladder-total-stars">0</span></div>
         </div>
-        
-        <div class="rank-ladder-wrapper" id="rank-ladder">
-            <!-- Injected by JS -->
-        </div>
-        
+        <div class="rank-ladder-wrapper" id="rank-ladder"></div>
         <button class="btn btn-close" onclick="rankMenu.close()" style="margin-top: 20px;">Back</button>
     </div>
 
@@ -457,7 +491,6 @@
             <div class="coin-icon"></div>
             <span id="shop-coins">0</span>
         </div>
-
         <div class="shop-container">
             <div class="crate-section">
                 <div style="font-size:1.5rem; font-weight:900; margin-bottom:20px; color:#2d3436;">LOOT CRATE</div>
@@ -468,13 +501,11 @@
                     <span style="color:var(--rarity-legendary)">Guaranteed +10 Rank Stars</span>
                 </div>
             </div>
-            
-            <div class="skin-list" id="skin-grid">
-                <!-- Injected by JS -->
-            </div>
+            <div class="skin-list" id="skin-grid"></div>
         </div>
-
-        <button class="btn btn-close" onclick="shop.close()">Back</button>
+        
+        <!-- BACK BUTTON POSITIONED CORRECTLY -->
+        <button class="btn btn-close" style="margin-top:20px;" onclick="shop.close()">Back</button>
     </div>
 
     <!-- Fullscreen Crate Animation Overlay -->
@@ -506,10 +537,7 @@
             <div style="color:#636e72;">Area Captured</div>
             <div style="margin-top:10px; font-weight:bold; color:#fdcb6e; font-size:1.2rem;" id="pause-rewards"></div>
         </div>
-        
-        <!-- Revive Button (Only shown if not revived yet) -->
         <button class="btn btn-revive" onclick="game.startRevive()" id="btn-revive">Revive (Watch Ad)</button>
-        
         <button class="btn btn-play" onclick="game.resume()" id="btn-resume">Resume</button>
         <button class="btn btn-close" onclick="game.toMenu()">Main Menu</button>
     </div>
@@ -517,7 +545,14 @@
     <script>
         /** PAPER CONQUEST: WORLD TOUR **/
 
-        // Rank System
+        const WORLDS = [
+            { id: 'earth', name: 'Home Garden', color: '#f5f6fa', border: '#2d3436' },
+            { id: 'desert', name: 'Sandy Dunes', color: '#f7f1e3', border: '#ccae62' },
+            { id: 'ice', name: 'Frozen Tundra', color: '#dff9fb', border: '#22a6b3' },
+            { id: 'magma', name: 'Molten Core', color: '#ffeaa7', border: '#d35400' },
+            { id: 'space', name: 'Deep Space', color: '#2c3e50', border: '#ecf0f1' }
+        ];
+
         const RANK_DEF = [
             { name: "Bronze I", stars: 0, reward: 0, type: "bronze" },
             { name: "Bronze II", stars: 50, reward: 200, type: "bronze" },
@@ -542,15 +577,12 @@
             { name: "Legend III", stars: 7500, reward: 15000, type: "legend" }
         ];
 
-        // Rank Icons (SVG)
         const getRankIcon = (type) => {
             const colors = {
                 bronze: '#cd7f32', silver: '#bdc3c7', gold: '#f1c40f',
                 platinum: '#00cec9', diamond: '#0984e3', master: '#d63031', legend: '#6c5ce7'
             };
             const c = colors[type] || colors.bronze;
-            
-            // Simple shapes
             if(type === 'bronze') return `<svg viewBox="0 0 24 24" class="rank-icon-svg"><circle cx="12" cy="12" r="10" fill="${c}"/></svg>`;
             if(type === 'silver') return `<svg viewBox="0 0 24 24" class="rank-icon-svg"><path d="M12 2L2 7v6c0 5.5 3.8 10.7 10 12 6.2-1.3 10-6.5 10-12V7l-10-5z" fill="${c}"/></svg>`;
             if(type === 'gold') return `<svg viewBox="0 0 24 24" class="rank-icon-svg"><path d="M12 2L2 7v6c0 5.5 3.8 10.7 10 12 6.2-1.3 10-6.5 10-12V7l-10-5z" fill="${c}"/><circle cx="12" cy="12" r="4" fill="#fff" opacity="0.5"/></svg>`;
@@ -565,7 +597,8 @@
             common: { color: '#b2bec3', name: 'Common', prob: 0.60 },
             rare: { color: '#0984e3', name: 'Rare', prob: 0.30 },
             epic: { color: '#a29bfe', name: 'Epic', prob: 0.09 },
-            legendary: { color: '#fdcb6e', name: 'Legendary', prob: 0.01 }
+            legendary: { color: '#fdcb6e', name: 'Legendary', prob: 0.01 },
+            mythic: { color: '#ff7675', name: 'Mythic', prob: 0.00 } // Special skins
         };
 
         const SKINS = [
@@ -582,22 +615,39 @@
             { id: 'creeper', name: 'Creeper', color: '#55efc4', type: 'face', face: 'creeper', rarity: 'epic' },
             { id: 'sus', name: 'Imposter', color: '#d63031', type: 'face', face: 'sus', rarity: 'legendary' },
             { id: 'toxic', name: 'Toxic', color: '#badc58', rarity: 'rare' },
-            { id: 'ocean', name: 'Deep Sea', color: '#0c2461', rarity: 'epic' }
+            { id: 'ocean', name: 'Deep Sea', color: '#0c2461', rarity: 'epic' },
+            // New Skins
+            { id: 'ninja', name: 'Ninja', color: '#2d3436', type: 'face', face: 'ninja', rarity: 'rare' },
+            { id: 'robot', name: 'Bot 2.0', color: '#b2bec3', type: 'face', face: 'robot', rarity: 'rare' },
+            { id: 'vampire', name: 'Dracula', color: '#dfe6e9', type: 'face', face: 'vampire', rarity: 'epic' },
+            { id: 'pumpkin', name: 'Jack', color: '#e17055', type: 'face', face: 'pumpkin', rarity: 'epic' },
+            { id: 'hacker', name: 'Hacker', color: '#00b894', type: 'face', face: 'hacker', rarity: 'legendary' },
+            { id: 'king', name: 'The King', color: '#f1c40f', type: 'face', face: 'king', rarity: 'legendary' }
         ];
         
         const BOT_NAMES = ["Specter", "Vortex", "Shadow", "Titan", "Fury", "Blaze", "Storm", "Pulse", "Nova", "Rogue"];
 
         const Store = {
-            data: { coins: 0, stars: 0, worldPercent: 0, unlocked: ['red', 'blue', 'green'], equipped: 'red' },
+            data: { 
+                coins: 0, 
+                stars: 0, 
+                worldProgress: [0, 0, 0, 0, 0], // Progress for each world
+                activeWorld: 0,
+                unlocked: ['red', 'blue', 'green'], 
+                equipped: 'red' 
+            },
             init() {
-                const s = localStorage.getItem('paper_conquest_v4');
-                if(s) try { this.data = {...this.data, ...JSON.parse(s)}; } catch(e){}
-                if(this.data.stars === undefined) this.data.stars = 0;
+                const s = localStorage.getItem('paper_conquest_v5');
+                if(s) try { 
+                    const parsed = JSON.parse(s);
+                    if(parsed.worldProgress === undefined) parsed.worldProgress = [parsed.worldPercent || 0, 0, 0, 0, 0];
+                    if(parsed.activeWorld === undefined) parsed.activeWorld = 0;
+                    this.data = {...this.data, ...parsed}; 
+                } catch(e){}
                 this.updateUI();
             },
-            save() { localStorage.setItem('paper_conquest_v4', JSON.stringify(this.data)); this.updateUI(); },
+            save() { localStorage.setItem('paper_conquest_v5', JSON.stringify(this.data)); this.updateUI(); },
             
-            // Save Key Logic
             getExportString() { return btoa(JSON.stringify(this.data)); },
             loadFromString(str) {
                 try {
@@ -624,21 +674,25 @@
                 
                 const rank = this.getCurrentRank();
                 const iconHtml = getRankIcon(rank.type);
-                
-                // Main Menu
-                const domPct = this.data.worldPercent % 100;
-                document.getElementById('menu-world-fill').style.width = `${domPct.toFixed(1)}%`;
-                const lvl = Math.floor(this.data.worldPercent / 100) + 1;
-                document.getElementById('menu-world-text').innerText = `Domination: ${domPct.toFixed(1)}% (Tier ${lvl})`;
                 document.getElementById('menu-rank').innerText = rank.name;
                 document.getElementById('menu-rank-icon').innerHTML = iconHtml;
-                
-                // HUD
                 document.getElementById('hud-rank-text').innerText = rank.name;
                 document.getElementById('hud-stars').innerText = this.data.stars;
                 document.getElementById('hud-rank-icon').innerHTML = iconHtml;
             },
-            addWorldProgress(pct) { this.data.worldPercent += pct; this.save(); },
+            addWorldProgress(pct) { 
+                const currentW = this.data.activeWorld;
+                const oldProg = this.data.worldProgress[currentW];
+                this.data.worldProgress[currentW] += pct;
+                
+                if(oldProg < 100 && this.data.worldProgress[currentW] >= 100) {
+                    document.getElementById('unlock-msg').innerText = "WORLD UNLOCKED";
+                    document.getElementById('unlock-sub').innerText = `You conquered ${WORLDS[currentW].name}!`;
+                    document.getElementById('unlock-overlay').classList.add('visible');
+                }
+                
+                this.save(); 
+            },
             addStars(amount) { this.data.stars += amount; this.save(); },
             addCoins(amount) { this.data.coins += amount; this.save(); },
             unlock(id) { if(!this.data.unlocked.includes(id)) { this.data.unlocked.push(id); this.save(); } }
@@ -667,24 +721,20 @@
             }
         };
         
-        // AD MANAGER (Google H5 Games Ads Wrapper)
         const AdManager = {
             isReady: false,
-            init() {
-                if(window.adsbygoogle && window.adConfig) { this.isReady = true; console.log("AdSense H5 SDK Detected"); }
-            },
+            init() { if(window.adsbygoogle && window.adConfig) { this.isReady = true; } },
             showRewardAd(onSuccess, onFailure) {
                 if(typeof adBreak !== 'undefined') {
                     adBreak({
                         type: 'reward', name: 'revive_reward',
-                        beforeAd: () => { game.state = 'AD'; console.log("Ad starting..."); },
-                        afterAd: () => { console.log("Ad finished."); },
+                        beforeAd: () => { game.state = 'AD'; },
+                        afterAd: () => { },
                         beforeReward: (showAdFn) => { showAdFn(); },
                         adDismissed: () => { if(onFailure) onFailure(); },
                         adViewed: () => { if(onSuccess) onSuccess(); }
                     });
                 } else {
-                    console.log("AdSense SDK not found. Using fallback.");
                     this.playSimulatedAd(onSuccess);
                 }
             },
@@ -700,6 +750,49 @@
                 }, 1000);
             }
         };
+
+        const worldMenu = {
+            open() {
+                const grid = document.getElementById('world-grid');
+                grid.innerHTML = '';
+                const progress = Store.data.worldProgress;
+                const active = Store.data.activeWorld;
+                
+                WORLDS.forEach((w, i) => {
+                    const prevProg = i === 0 ? 100 : progress[i-1];
+                    const isUnlocked = prevProg >= 100;
+                    const currentProg = Math.min(progress[i], 100).toFixed(1);
+                    const isCompleted = currentProg >= 100;
+                    const isActive = active === i;
+                    
+                    const card = document.createElement('div');
+                    card.className = `world-card ${isActive ? 'active' : ''} ${!isUnlocked ? 'locked' : ''} ${isCompleted ? 'completed' : ''}`;
+                    if(isUnlocked) card.onclick = () => this.selectWorld(i);
+                    
+                    card.innerHTML = `
+                        <div class="world-complete-badge">100%</div>
+                        <h2 style="margin:0; color:${w.border};">${w.name}</h2>
+                        <div style="font-size:0.9rem; color:#636e72;">${!isUnlocked ? 'Locked' : (isActive ? 'Active' : 'Select')}</div>
+                        <div class="world-progress-bar">
+                            <div class="world-progress-fill-card" style="width:${currentProg}%"></div>
+                        </div>
+                        <div style="text-align:right; font-size:0.8rem; font-weight:bold; margin-top:5px;">${currentProg}%</div>
+                    `;
+                    grid.appendChild(card);
+                });
+                
+                document.getElementById('world-menu').classList.remove('hidden');
+            },
+            selectWorld(i) {
+                Store.data.activeWorld = i;
+                Store.save();
+                this.open();
+            },
+            close() {
+                document.getElementById('world-menu').classList.add('hidden');
+            }
+        };
+        window.worldMenu = worldMenu;
 
         const saveMenu = {
             open() { document.getElementById('save-menu').classList.remove('hidden'); document.getElementById('save-key-box').value = Store.getExportString(); },
@@ -771,6 +864,10 @@
                     if (s.type === 'face') {
                         if (s.face === 'creeper') faceHtml = `<div class="face-creeper"><div class="fc-eye-l"></div><div class="fc-eye-r"></div><div class="fc-nose"></div><div class="fc-mouth"></div></div>`;
                         else if (s.face === 'sus') faceHtml = `<div class="face-sus"></div>`;
+                        else if (s.face === 'ninja') faceHtml = `<div class="face-ninja"><div class="fn-slit"><div class="fn-eye-l"></div><div class="fn-eye-r"></div></div></div>`;
+                        else if (s.face === 'robot') faceHtml = `<div class="face-robot"><div class="fr-eye"><div class="fr-pupil"></div></div></div>`;
+                        else if (s.face === 'king') faceHtml = `<div class="face-king"></div><div class="fk-eyes"><div class="fk-eye"></div><div class="fk-eye"></div></div>`;
+                        // Fallbacks for others
                     } else faceHtml = `<div class="face-eyes"></div>`;
                     el.innerHTML = `<div class="skin-icon-container"><div class="skin-block" style="background:${s.color}"></div>${faceHtml}</div><div style="font-size:0.8rem; font-weight:bold;">${s.name}</div><div class="rarity-dot" style="background:${r.color}"></div>`;
                     grid.appendChild(el);
@@ -810,8 +907,12 @@
                 glow.style.background = `radial-gradient(circle, ${rInfo.color} 0%, rgba(255,255,255,0) 70%)`;
                 let faceHtml = '';
                 if (skin.type === 'face') {
-                    if (skin.face === 'creeper') faceHtml = `<div class="face-creeper"><div class="fc-eye-l"></div><div class="fc-eye-r"></div><div class="fc-nose"></div><div class="fc-mouth"></div></div>`;
-                    else if (skin.face === 'sus') faceHtml = `<div class="face-sus"></div>`;
+                    // Logic reuse for modal icon
+                     if (skin.face === 'creeper') faceHtml = `<div class="face-creeper"><div class="fc-eye-l"></div><div class="fc-eye-r"></div><div class="fc-nose"></div><div class="fc-mouth"></div></div>`;
+                     else if (skin.face === 'sus') faceHtml = `<div class="face-sus"></div>`;
+                     else if (skin.face === 'ninja') faceHtml = `<div class="face-ninja"><div class="fn-slit"><div class="fn-eye-l"></div><div class="fn-eye-r"></div></div></div>`;
+                     else if (skin.face === 'robot') faceHtml = `<div class="face-robot"><div class="fr-eye"><div class="fr-pupil"></div></div></div>`;
+                     else if (skin.face === 'king') faceHtml = `<div class="face-king"></div><div class="fk-eyes"><div class="fk-eye"></div><div class="fk-eye"></div></div>`;
                 } else faceHtml = `<div class="face-eyes"></div>`;
                 document.getElementById('reward-icon').innerHTML = `<div class="skin-block" style="background:${skin.color}"></div>${faceHtml}`;
                 document.getElementById('reward-name').innerText = skin.name + (isDup ? " (Duplicate +250)" : "");
@@ -849,14 +950,20 @@
             draw(ctx, zoom) {
                 const sx = this.x * zoom + zoom/2; const sy = this.y * zoom + zoom/2;
                 ctx.save(); ctx.translate(sx, sy); ctx.rotate(this.rotation);
-                if (this.type === 0) {
-                    ctx.fillStyle = '#fdcb6e'; ctx.beginPath(); ctx.arc(0, 0, zoom/3, 0, Math.PI*2); ctx.fill();
+                // RANGE 4x4
+                const scale = 2.0; 
+                if (this.type === 0) { // Coin
+                    ctx.fillStyle = '#fdcb6e'; ctx.beginPath(); ctx.arc(0, 0, zoom/2 * scale, 0, Math.PI*2); ctx.fill();
                     ctx.strokeStyle = '#d35400'; ctx.lineWidth=2; ctx.stroke();
-                    ctx.fillStyle = '#d35400'; ctx.font='bold 12px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('$',0,0);
-                } else if (this.type === 1) {
-                    ctx.fillStyle = '#a29bfe'; ctx.fillRect(-zoom/4, -zoom/4, zoom/2, zoom/2);
-                } else {
-                    ctx.fillStyle = '#00cec9'; ctx.beginPath(); ctx.moveTo(0, -zoom/3); ctx.lineTo(zoom/4, zoom/3); ctx.lineTo(-zoom/4, zoom/3); ctx.fill();
+                    ctx.fillStyle = '#d35400'; ctx.font='bold 20px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('$',0,0);
+                } else if (this.type === 1) { // Star
+                    ctx.fillStyle = '#a29bfe'; ctx.fillRect(-zoom/3*scale, -zoom/3*scale, zoom*0.66*scale, zoom*0.66*scale);
+                } else if (this.type === 2) { // Speed
+                    ctx.fillStyle = '#00cec9'; ctx.beginPath(); ctx.moveTo(0, -zoom/2*scale); ctx.lineTo(zoom/3*scale, zoom/2*scale); ctx.lineTo(-zoom/3*scale, zoom/2*scale); ctx.fill();
+                } else if (this.type === 3) { // Shield
+                    ctx.fillStyle = '#ff7675'; ctx.beginPath(); ctx.arc(0, 0, zoom/2*scale, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font='bold 20px Arial'; ctx.fillText('S', -6, 6);
+                } else if (this.type === 4) { // Freeze
+                    ctx.fillStyle = '#74b9ff'; ctx.fillRect(-zoom/3*scale, -zoom/3*scale, zoom*0.66*scale, zoom*0.66*scale); ctx.fillStyle = '#fff'; ctx.font='bold 20px Arial'; ctx.fillText('F', -6, 6);
                 }
                 ctx.restore();
             }
@@ -887,6 +994,34 @@
                 this.trail = []; this.alive = true;
                 this.invulnerable = 180;
                 for(let xx=tx-1; xx<=tx+1; xx++) { for(let yy=ty-1; yy<=ty+1; yy++) grid.set(xx,yy,this.id); }
+            }
+            
+            // New Method for intelligent respawn
+            respawnInTerritory(grid) {
+                let candidates = [];
+                for(let y=2; y<grid.h-2; y++) {
+                    for(let x=2; x<grid.w-2; x++) {
+                        if(grid.get(x, y) === this.id) {
+                            candidates.push({x, y});
+                        }
+                    }
+                }
+                
+                if(candidates.length > 0) {
+                    const spot = candidates[Math.floor(Math.random() * candidates.length)];
+                    this.x = spot.x; this.y = spot.y;
+                    this.gridX = spot.x; this.gridY = spot.y;
+                    this.prevX = spot.x; this.prevY = spot.y;
+                } else {
+                    this.spawn(grid);
+                    return;
+                }
+                
+                this.angle = Math.random()*Math.PI*2; 
+                this.targetAngle = this.angle;
+                this.trail = []; 
+                this.alive = true;
+                this.invulnerable = 180;
             }
         }
 
@@ -928,7 +1063,7 @@
             ctx: document.getElementById('gameCanvas').getContext('2d'),
             grid: null, player: null, bots: [], state: 'MENU', sessionCoins: 0, loopId: null,
             moveSpeed: 0.15, particles: [], shake: 0, dominationMode: false, hasRevived: false,
-            powerups: [],
+            powerups: [], bonusTimer: 0, freezeTimer: 0, freezeOwnerId: -1,
 
             init() {
                 Store.init(); AudioSys.init(); this.resize();
@@ -968,9 +1103,11 @@
                 this.sessionCoins = 0; this.state = 'PLAY'; this.lastTime = performance.now(); this.acc = 0;
                 this.dominationMode = false; this.hasRevived = false;
                 this.powerups = [];
+                this.freezeTimer = 0;
                 document.getElementById('start-menu').classList.add('hidden');
                 document.getElementById('pause-menu').classList.add('hidden');
                 document.getElementById('domination-mode').classList.remove('active');
+                document.getElementById('bonus-ui').style.display = 'none';
                 document.getElementById('kill-feed').innerHTML = '';
             },
 
@@ -979,10 +1116,10 @@
             },
 
             spawnPowerup() {
-                if(this.powerups.length < 5) {
+                if(this.powerups.length < 5 || this.state === 'BONUS') {
                     const x = Math.floor(Math.random()*58)+1;
                     const y = Math.floor(Math.random()*58)+1;
-                    const type = Math.floor(Math.random()*3);
+                    const type = Math.floor(Math.random()*5); // 0-4 Now!
                     this.powerups.push(new Powerup(x, y, type));
                 }
             },
@@ -1000,12 +1137,24 @@
                 this.hasRevived = true;
                 this.lastTime = performance.now();
                 document.getElementById('pause-menu').classList.add('hidden');
-                this.player.spawn(this.grid);
+                this.player.respawnInTerritory(this.grid);
+            },
+            
+            startBonusRound() {
+                this.state = 'BONUS';
+                this.bonusTimer = 5 * 60; // 5 seconds at 60fps logic
+                document.getElementById('domination-mode').classList.remove('active');
+                document.getElementById('bonus-ui').style.display = 'block';
+                this.msg("100% CONQUERED! BONUS TIME!");
+                // Kill all bots
+                this.bots.forEach(b => { if(b.alive) this.kill(b); });
+                // Spawn lots of loot
+                for(let i=0; i<20; i++) this.spawnPowerup();
             },
 
             loop(now) {
                 requestAnimationFrame(t => this.loop(t));
-                if(this.state !== 'PLAY') return;
+                if(this.state !== 'PLAY' && this.state !== 'BONUS') return;
                 const dt = now - this.lastTime; this.lastTime = now; this.acc += dt;
                 const step = 1000/60;
                 while(this.acc >= step) { this.update(); this.acc -= step; }
@@ -1013,6 +1162,27 @@
             },
 
             update() {
+                // Freeze Timer Logic
+                if (this.freezeTimer > 0) this.freezeTimer--;
+
+                if (this.state === 'BONUS') {
+                    this.bonusTimer--;
+                    document.getElementById('bonus-timer').innerText = Math.ceil(this.bonusTimer/60);
+                    if (this.bonusTimer % 10 === 0) this.spawnPowerup();
+                    this.updateEntity(this.player, true);
+                    this.powerups.forEach(p => p.update());
+                    if (this.bonusTimer <= 0) {
+                         this.gameOver(100);
+                    }
+                    return;
+                }
+                
+                // Domination Check
+                if (this.player.percent >= 99.9) { // Using 99.9 for float safety
+                     this.startBonusRound();
+                     return;
+                }
+
                 if (this.player.percent > 60 && !this.dominationMode) {
                     this.dominationMode = true;
                     document.getElementById('domination-mode').classList.add('active');
@@ -1024,41 +1194,32 @@
                 this.updateEntity(this.player, true);
                 this.bots.forEach(b => {
                     if(b.alive) {
-                        // SMARTER AI
-                        const lookDist = 5;
-                        const lx = b.x + Math.cos(b.angle) * lookDist;
-                        const ly = b.y + Math.sin(b.angle) * lookDist;
+                        // FIX AI SPIN: Safe target logic
+                        const lx = b.x + Math.cos(b.angle) * 3;
+                        const ly = b.y + Math.sin(b.angle) * 3;
                         let danger = false;
                         
-                        // Check bounds (WHISKER)
+                        // Wall detection
                         if(lx < 2 || lx >= 58 || ly < 2 || ly >= 58) danger = true;
                         
-                        // Check own trail
+                        // Self-trail detection
                         if(!danger && b.trail.length > 5) {
                            for(const t of b.trail) {
-                               const dist = Math.hypot(t.x - lx, t.y - ly);
-                               if(dist < 2) { danger = true; break; }
+                               if(Math.abs(t.x - lx) < 2 && Math.abs(t.y - ly) < 2) { danger = true; break; }
                            }
                         }
 
                         if(danger) {
-                            // Turn away from wall center
-                            const cx = 30; const cy = 30;
-                            const target = Math.atan2(cy - b.y, cx - b.x);
+                            // Instead of adding relative angle (which causes spin),
+                            // Set target to center of map (safe zone)
+                            const target = Math.atan2(30 - b.y, 30 - b.x);
+                            // Smoothly steer towards safe target
                             let diff = target - b.angle;
-                             while(diff < -Math.PI) diff += Math.PI*2; while(diff > Math.PI) diff -= Math.PI*2;
-                            b.targetAngle += diff * 0.8; // Hard turn to center
+                            while(diff < -Math.PI) diff += Math.PI*2; while(diff > Math.PI) diff -= Math.PI*2;
+                            b.targetAngle = b.angle + diff; // Override current target
                         } else {
-                            // Less greedy: Return if trail > 8
-                            if (b.trail.length > (5 + Math.random()*5)) {
-                                 const dx = 30 - b.x; const dy = 30 - b.y;
-                                 const target = Math.atan2(dy, dx);
-                                 let diff = target - b.angle;
-                                 while(diff < -Math.PI) diff += Math.PI*2; while(diff > Math.PI) diff -= Math.PI*2;
-                                 b.targetAngle += diff * 0.05;
-                            } else {
-                                if(Math.random()<0.05) b.targetAngle += (Math.random()-0.5)*1.5;
-                            }
+                            // Standard wander
+                            if(Math.random()<0.05) b.targetAngle += (Math.random()-0.5)*1.0;
                         }
                     }
                     this.updateEntity(b, false);
@@ -1082,6 +1243,10 @@
 
             updateEntity(e, isP) {
                 if(!e.alive) return;
+                
+                // Freeze check
+                if (this.freezeTimer > 0 && e.id !== this.freezeOwnerId) return;
+
                 if(e.invulnerable > 0) e.invulnerable--;
                 if(e.speedBoost > 0) e.speedBoost--;
 
@@ -1103,13 +1268,21 @@
                 
                 for(let i=this.powerups.length-1; i>=0; i--) {
                     const p = this.powerups[i];
-                    if(Math.abs(p.x - gx) < 1 && Math.abs(p.y - gy) < 1) {
-                        if(isP) {
-                            if(p.type===0) { this.sessionCoins+=50; this.msg("+50 Coins"); }
-                            else if(p.type===1) { Store.addStars(5); this.msg("+5 Stars"); }
-                            else { e.speedBoost = 300; this.msg("SPEED UP!"); }
-                            AudioSys.play('coin');
+                    
+                    // COLLISION FIX: Range increased to 2.5 (approx 4x4)
+                    if(Math.abs(p.x - e.x) < 2.5 && Math.abs(p.y - e.y) < 2.5) {
+                        // Apply effect based on type
+                        if(p.type===0 && isP) { this.sessionCoins+=50; this.msg("+50 Coins"); }
+                        else if(p.type===1 && isP) { Store.addStars(5); this.msg("+5 Stars"); }
+                        else if(p.type===2) { e.speedBoost = 300; if(isP) this.msg("SPEED UP!"); }
+                        else if(p.type===3) { e.invulnerable = 600; if(isP) this.msg("SHIELDED (10s)"); }
+                        else if(p.type===4) { 
+                            this.freezeTimer = 300; 
+                            this.freezeOwnerId = e.id; 
+                            if(isP) this.msg("ENEMIES FROZEN!"); 
                         }
+                        
+                        if(isP) AudioSys.play('coin');
                         this.powerups.splice(i, 1);
                     }
                 }
@@ -1143,7 +1316,7 @@
                         if(other.trail[i].x===x && other.trail[i].y===y) {
                             if(other===self) this.kill(self);
                             else {
-                                this.kill(other, self); // KILLER ARG ADDED
+                                this.kill(other, self); 
                                 if(self===this.player) { this.sessionCoins+=50; this.msg("+50 Coins"); AudioSys.play('coin'); }
                             }
                             return;
@@ -1165,7 +1338,6 @@
             },
             
             killAt(x, y, killerId) {
-                // Determine killer object
                 const killer = (killerId === 0) ? this.player : this.bots.find(b => b.id === killerId);
                 
                 if(this.player.alive && this.player.gridX===x && this.player.gridY===y && this.player.invulnerable<=0) this.kill(this.player, killer);
@@ -1180,12 +1352,15 @@
                 this.spawnParticles(e.x, e.y, e.color, 20);
                 this.shake = 10;
                 
-                // Territory Logic: If killer exists, transfer land. Else clear.
-                if (killer && killer.id !== e.id) {
-                     this.grid.data.forEach((v,i) => { if(v===e.id) this.grid.data[i] = killer.id; });
-                     if (killer === this.player) this.msg("TERRITORY SEIZED!");
-                } else if (e.id !== 0) { // Don't clear player land if self-kill (for revive)
-                     this.grid.data.forEach((v,i) => { if(v===e.id) this.grid.data[i]=-1; });
+                if (e.id === 0) {
+                    // Player Death: Don't clear land for revive
+                } else {
+                    if (killer && killer.id !== e.id) {
+                         this.grid.data.forEach((v,i) => { if(v===e.id) this.grid.data[i] = killer.id; });
+                         if (killer === this.player) this.msg("TERRITORY SEIZED!");
+                    } else { 
+                         this.grid.data.forEach((v,i) => { if(v===e.id) this.grid.data[i]=-1; });
+                    }
                 }
                 
                 AudioSys.play('kill');
@@ -1236,7 +1411,7 @@
             },
             
             toMenu() {
-                // If exiting to menu, clear player land (reset game essentially)
+                // If quitting, clear player land and commit score
                 this.grid.data.forEach((v,i) => { if(v===0) this.grid.data[i]=-1; });
                 
                 Store.addCoins(this.sessionCoins);
@@ -1263,7 +1438,9 @@
                 
                 ctx.translate(camX, camY);
                 
-                ctx.fillStyle = '#f5f6fa'; ctx.fillRect(0,0, 60*zoom, 60*zoom);
+                // Background Pattern from World Theme
+                const activeW = WORLDS[Store.data.activeWorld];
+                ctx.fillStyle = activeW.color; ctx.fillRect(0,0, 60*zoom, 60*zoom);
                 ctx.strokeStyle = 'rgba(0,0,0,0.05)'; ctx.lineWidth = 1; ctx.beginPath();
                 for(let i=0; i<=60; i++) { ctx.moveTo(i*zoom,0); ctx.lineTo(i*zoom, 60*zoom); ctx.moveTo(0,i*zoom); ctx.lineTo(60*zoom, i*zoom); }
                 ctx.stroke();
@@ -1308,6 +1485,13 @@
                     } else {
                         ctx.fillStyle='white'; ctx.beginPath(); ctx.arc(-7,-2,4,0,7); ctx.arc(7,-2,4,0,7); ctx.fill();
                     }
+                    
+                    // Frozen Effect
+                    if(game.freezeTimer > 0 && e.id !== game.freezeOwnerId) {
+                         ctx.fillStyle = 'rgba(116, 185, 255, 0.6)';
+                         ctx.fillRect(-zoom/2, -zoom/2, zoom, zoom);
+                    }
+
                     ctx.restore();
                     ctx.globalAlpha = 1.0;
                     if(isP || e.percent > 5) {
@@ -1320,7 +1504,7 @@
                 
                 this.particles.forEach(p => p.draw(ctx, zoom));
 
-                ctx.strokeStyle = '#2d3436'; ctx.lineWidth = 5; ctx.strokeRect(0,0,60*zoom, 60*zoom);
+                ctx.strokeStyle = activeW.border; ctx.lineWidth = 5; ctx.strokeRect(0,0,60*zoom, 60*zoom);
                 ctx.restore();
             }
         };
