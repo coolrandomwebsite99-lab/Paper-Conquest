@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Paper Conquest: World Tour</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2344719724787837"
+     crossorigin="anonymous"></script>
     
     <!-- --- GOOGLE ADSENSE INTEGRATION START --- -->
     <!-- UPDATED WITH YOUR PUBLISHER ID -->
@@ -711,8 +713,12 @@
                 const box = document.getElementById('save-key-box');
                 const success = Store.loadFromString(box.value);
                 if(success) {
-                    alert("Data Loaded Successfully! Reloading...");
-                    location.reload();
+                    alert("Data Loaded Successfully!");
+                    this.close();
+                    // Force a UI refresh of the shop if it's open or just to be safe
+                    if(!document.getElementById('shop-menu').classList.contains('hidden')) {
+                        shop.render();
+                    }
                 } else {
                     alert("Invalid Save Key!");
                 }
