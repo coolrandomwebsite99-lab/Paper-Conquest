@@ -1024,14 +1024,14 @@
                 this.updateEntity(this.player, true);
                 this.bots.forEach(b => {
                     if(b.alive) {
-                        // SMARTER AI: RAYCASTING
+                        // SMARTER AI
                         const lookDist = 5;
                         const lx = b.x + Math.cos(b.angle) * lookDist;
                         const ly = b.y + Math.sin(b.angle) * lookDist;
                         let danger = false;
                         
-                        // Check bounds
-                        if(lx < 0 || lx >= 60 || ly < 0 || ly >= 60) danger = true;
+                        // Check bounds (WHISKER)
+                        if(lx < 2 || lx >= 58 || ly < 2 || ly >= 58) danger = true;
                         
                         // Check own trail
                         if(!danger && b.trail.length > 5) {
@@ -1042,10 +1042,23 @@
                         }
 
                         if(danger) {
-                            // Turn hard
-                            b.targetAngle += Math.PI * 0.8;
+                            // Turn away from wall center
+                            const cx = 30; const cy = 30;
+                            const target = Math.atan2(cy - b.y, cx - b.x);
+                            let diff = target - b.angle;
+                             while(diff < -Math.PI) diff += Math.PI*2; while(diff > Math.PI) diff -= Math.PI*2;
+                            b.targetAngle += diff * 0.8; // Hard turn to center
                         } else {
-                            if(Math.random()<0.05) b.targetAngle += (Math.random()-0.5)*1.5;
+                            // Less greedy: Return if trail > 8
+                            if (b.trail.length > (5 + Math.random()*5)) {
+                                 const dx = 30 - b.x; const dy = 30 - b.y;
+                                 const target = Math.atan2(dy, dx);
+                                 let diff = target - b.angle;
+                                 while(diff < -Math.PI) diff += Math.PI*2; while(diff > Math.PI) diff -= Math.PI*2;
+                                 b.targetAngle += diff * 0.05;
+                            } else {
+                                if(Math.random()<0.05) b.targetAngle += (Math.random()-0.5)*1.5;
+                            }
                         }
                     }
                     this.updateEntity(b, false);
@@ -1125,40 +1138,41 @@
             checkCol(self, x, y) {
                 [this.player, ...this.bots].forEach(other => {
                     if(!other.alive) return;
-                    // Check trails
                     for(let i=0; i<other.trail.length; i++) {
                         if(other===self && i>=other.trail.length-2) continue;
                         if(other.trail[i].x===x && other.trail[i].y===y) {
                             if(other===self) this.kill(self);
                             else {
-                                this.kill(other);
+                                this.kill(other, self); // KILLER ARG ADDED
                                 if(self===this.player) { this.sessionCoins+=50; this.msg("+50 Coins"); AudioSys.play('coin'); }
                             }
                             return;
                         }
                     }
-                    // Head-to-Head
                     if(other!==self && other.gridX===x && other.gridY===y) {
                         const selfInv = self.invulnerable > 0;
                         const otherInv = other.invulnerable > 0;
-                        if (selfInv && !otherInv) { this.kill(other); return; }
-                        if (otherInv && !selfInv) { this.kill(self); return; }
+                        if (selfInv && !otherInv) { this.kill(other, self); return; }
+                        if (otherInv && !selfInv) { this.kill(self, other); return; }
                         if (selfInv && otherInv) return;
 
                         const owner = this.grid.get(x,y);
-                        if(owner===self.id) this.kill(other); 
-                        else if(owner===other.id) this.kill(self);
+                        if(owner===self.id) this.kill(other, self); 
+                        else if(owner===other.id) this.kill(self, other);
                         else { this.kill(self); this.kill(other); }
                     }
                 });
             },
             
             killAt(x, y, killerId) {
-                if(this.player.alive && this.player.gridX===x && this.player.gridY===y && this.player.invulnerable<=0) this.kill(this.player);
-                this.bots.forEach(b => { if(b.id!==killerId && b.alive && b.gridX===x && b.gridY===y && b.invulnerable<=0) this.kill(b); });
+                // Determine killer object
+                const killer = (killerId === 0) ? this.player : this.bots.find(b => b.id === killerId);
+                
+                if(this.player.alive && this.player.gridX===x && this.player.gridY===y && this.player.invulnerable<=0) this.kill(this.player, killer);
+                this.bots.forEach(b => { if(b.id!==killerId && b.alive && b.gridX===x && b.gridY===y && b.invulnerable<=0) this.kill(b, killer); });
             },
 
-            kill(e) {
+            kill(e, killer) {
                 if(!e.alive) return;
                 const score = e.percent;
                 e.alive = false; 
@@ -1166,8 +1180,11 @@
                 this.spawnParticles(e.x, e.y, e.color, 20);
                 this.shake = 10;
                 
-                // Only clear territory if NOT player (Player keeps for revive chance)
-                if(e.id !== 0) {
+                // Territory Logic: If killer exists, transfer land. Else clear.
+                if (killer && killer.id !== e.id) {
+                     this.grid.data.forEach((v,i) => { if(v===e.id) this.grid.data[i] = killer.id; });
+                     if (killer === this.player) this.msg("TERRITORY SEIZED!");
+                } else if (e.id !== 0) { // Don't clear player land if self-kill (for revive)
                      this.grid.data.forEach((v,i) => { if(v===e.id) this.grid.data[i]=-1; });
                 }
                 
@@ -1219,8 +1236,9 @@
             },
             
             toMenu() {
-                // If exiting to menu, NOW we clear the territory we saved for potential revive
-                // Actually start() resets grid anyway.
+                // If exiting to menu, clear player land (reset game essentially)
+                this.grid.data.forEach((v,i) => { if(v===0) this.grid.data[i]=-1; });
+                
                 Store.addCoins(this.sessionCoins);
                 Store.addWorldProgress(this.player.percent);
                 Store.addStars(Math.ceil(this.player.percent));
